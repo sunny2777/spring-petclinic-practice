@@ -1,6 +1,9 @@
 pipeline {
     agent {label 'Node-1'}
     triggers { pollSCM('* * * * *') }
+    Options {
+        timeout(time: 1, unit: 'HOURS') 
+    }
     stages {
         stage('SourceCode') {
             steps {
@@ -17,6 +20,16 @@ pipeline {
                 junit stdioRetention: '', testResults: '**/surefire-reports/*.xml'
                 archiveArtifacts artifacts: '**/*.jar', followSymlinks: false
             }
+        }
+    }
+     post {
+        success {
+            // send the success email
+            echo "Success"
+        }
+        unsuccessful {
+            //send the unsuccess email
+            echo "failure"
         }
     }
 }
