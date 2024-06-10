@@ -1,14 +1,25 @@
-node('Node-1'){
-    stage('SourceCode'){
-        git branch: 'sprint1_dev', url: 'https://github.com/sunny2777/spring-petclinic.git'
-    }
+pipeline {
+    agent {label 'Node-1'}
 
-    stage('Build'){
-        sh 'mvn package'
-    }
-
-    stage('Archiving and Test Results'){
-        junit stdioRetention: '', testResults: '**/surefire-reports/*.xml'
-        archiveArtifacts artifacts: '**/*.jar', followSymlinks: false
+    stages {
+         triggers {
+        pollSCM('* * * * *') 
+        }
+        stage('SourceCode') {
+            steps {
+                git branch: 'sprint1_dev', url: 'https://github.com/sunny2777/spring-petclinic.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+        stage('Archiving and Test Results') {
+            steps {
+                junit stdioRetention: '', testResults: '**/surefire-reports/*.xml'
+                archiveArtifacts artifacts: '**/*.jar', followSymlinks: false
+            }
+        }
     }
 }
