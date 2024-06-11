@@ -1,9 +1,6 @@
 pipeline {
     agent {label 'JDK17'}
     triggers { pollSCM('* * * * *') }
-    Options {
-        timeout(time: 1, unit: 'HOURS') 
-    }
     stages {
         stage('SourceCode') {
             steps {
