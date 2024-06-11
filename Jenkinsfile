@@ -1,5 +1,5 @@
 pipeline {
-    agent {label 'Node-1'}
+    agent {label 'JDK17'}
     triggers { pollSCM('* * * * *') }
     Options {
         timeout(time: 1, unit: 'HOURS') 
