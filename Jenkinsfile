@@ -1,6 +1,9 @@
 pipeline {
     agent {label 'JDK17'}
     triggers { pollSCM('* * * * *') }
+    parameters {
+        choice(name: 'GOAL', choices:['compile', 'package', 'clean package'])
+    }
     stages {
         stage('SourceCode') {
             steps {
@@ -9,7 +12,8 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'mvn package'
+                sh script: "mvn ${parms.GOAL}"
+                stash name:'spc-build-jar', includes: 'target/*.jar'
             }
         }
         stage('Archiving and Test Results') {
@@ -18,8 +22,16 @@ pipeline {
                 archiveArtifacts artifacts: '**/*.jar', followSymlinks: false
             }
         }
+        stage('deployment') {
+            steps {
+                unstash name: 'spc-build-jar'
+                echo "clone the latest playbook"
+                sh 'ansible --version'
+
+            }
+        }
     }
-     post {
+    post {
         success {
             // send the success email
             echo "Success"
