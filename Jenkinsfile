@@ -1,18 +1,23 @@
 pipeline {
     agent {label 'JDK17'}
-    triggers { pollSCM('* * * * *') }
+    options { 
+        timeout(time: 1, unit: 'HOURS')
+        retry(2) 
+    }
+    triggers { cron('0 * * * *') }
     parameters {
         choice(name: 'GOAL', choices:['compile', 'package', 'clean package'])
     }
     stages {
         stage('SourceCode') {
             steps {
-                git branch: 'sprint1_dev', url: 'https://github.com/sunny2777/spring-petclinic.git'
+                git url: 'https://github.com/sunny2777/spring-petclinic.git'
+                branch: 'sprint1_dev'
             }
         }
         stage('Build') {
             steps {
-                sh script: "mvn ${parms.GOAL}"
+                sh script: "mvn ${params.GOAL}"
                 stash name:'spc-build-jar', includes: 'target/*.jar'
             }
         }
