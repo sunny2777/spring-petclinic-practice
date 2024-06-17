@@ -29,7 +29,6 @@ pipeline {
         }
         stage('deployment') {
             steps {
-                unstash name: 'spc-build-jar'
                 echo "clone the latest playbook"
                 sh 'ansible --version'
 
