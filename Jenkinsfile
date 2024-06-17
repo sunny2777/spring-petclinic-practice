@@ -1,5 +1,5 @@
 pipeline {
-    agent {label 'JDK17'}
+    agent {label 'Built-In Node'}
     options { 
         timeout(time: 1, unit: 'HOURS')
         retry(2) 
