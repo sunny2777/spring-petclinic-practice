@@ -15,9 +15,12 @@ pipeline {
                 branch: 'sprint1_dev'
             }
         }
-        stage('Build') {
+        stage('Build and static code analysis') {
             steps {
-                sh script: "mvn ${params.GOAL}"
+                wirthSonarQubeEnv('SONAT_LATEST'){
+                    sh script: "mvn ${params.GOAL}"
+                }
+                
                 stash name:'spc-build-jar', includes: 'target/*.jar'
             }
         }
@@ -25,13 +28,6 @@ pipeline {
             steps {
                 junit stdioRetention: '', testResults: '**/surefire-reports/*.xml'
                 archiveArtifacts artifacts: '**/*.jar', followSymlinks: false
-            }
-        }
-        stage('deployment') {
-            steps {
-                echo "clone the latest playbook"
-                sh 'ansible --version'
-
             }
         }
     }
