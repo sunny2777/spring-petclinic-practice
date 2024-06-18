@@ -17,11 +17,9 @@ pipeline {
         }
         stage('Build and static code analysis') {
             steps {
-                wirthSonarQubeEnv('SONAT_LATEST'){
+                wirthSonarQubeEnv('SONAR_LATEST'){
                     sh script: "mvn ${params.GOAL}"
                 }
-                
-                stash name:'spc-build-jar', includes: 'target/*.jar'
             }
         }
         stage('Archiving and Test Results') {
