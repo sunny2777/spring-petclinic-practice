@@ -15,12 +15,10 @@ pipeline {
                 branch: 'sprint1_dev'
             }
         }
-        stage('Build and static code analysis') {
+        stage('Build') {
             steps {
-                wirthSonarQubeEnv('SONAR_LATEST'){
                     sh script: "mvn ${params.GOAL}"
                 }
-            }
         }
         stage('Archiving and Test Results') {
             steps {
