@@ -9,10 +9,12 @@ pipeline {
         choice(name: 'GOAL', choices:['compile', 'package', 'clean package'])
     }
     stages {
-        stage('SourceCode') {
+         stage('Build the Code and sonarqube-analysis') {
             steps {
-                git url: 'https://github.com/sunny2777/spring-petclinic.git',
-                branch: 'sprint1_dev'
+                withSonarQubeEnv('SONAR_LATEST') {
+                    sh script: "mvn ${params.GOAL} sonar:sonar"
+                }
+
             }
         }
         stage('Build') {
