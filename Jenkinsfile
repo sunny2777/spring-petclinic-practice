@@ -1,5 +1,5 @@
 pipeline {
-    agent Node-1
+    agent  {label 'JDK17'}
 
     stages {
         stage('Hello') {
